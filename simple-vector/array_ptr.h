@@ -47,7 +47,6 @@ public:
     ArrayPtr& operator=(ArrayPtr&& other) {
         if (this != &other) {
             std::swap(this->raw_ptr_, other.raw_ptr_);
-            other.Release();
         }
         return *this;
     }
