@@ -29,10 +29,8 @@ public:
     ArrayPtr(const ArrayPtr& other) = delete;
 
     ArrayPtr(ArrayPtr<Type>&& other) {
-        if (this != &other ) {
-            raw_ptr_ = std::move(other.raw_ptr_);
-            other.Release();
-        }
+        raw_ptr_ = other.raw_ptr_;
+        other.Release();
     }
 
     ~ArrayPtr() {
@@ -48,7 +46,7 @@ public:
 
     ArrayPtr& operator=(ArrayPtr&& other) {
         if (this != &other) {
-            raw_ptr_ = std::move(other.raw_ptr_);
+            std::swap(this->raw_ptr_, other.raw_ptr_);
             other.Release();
         }
         return *this;
