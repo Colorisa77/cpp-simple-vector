@@ -28,6 +28,13 @@ public:
     // Запрещаем копирование
     ArrayPtr(const ArrayPtr& other) = delete;
 
+    ArrayPtr(ArrayPtr<Type>&& other) {
+        if (this != &other ) {
+            raw_ptr_ = std::move(other.raw_ptr_);
+            other.Release();
+        }
+    }
+
     ~ArrayPtr() {
         delete[] raw_ptr_;
         raw_ptr_ = nullptr;
@@ -36,6 +43,14 @@ public:
     // Запрещаем присваивание
     ArrayPtr& operator=(const ArrayPtr& other) {
         raw_ptr_ = other.raw_ptr_;
+        return *this;
+    }
+
+    ArrayPtr& operator=(ArrayPtr&& other) {
+        if (this != &other) {
+            raw_ptr_ = std::move(other.raw_ptr_);
+            other.Release();
+        }
         return *this;
     }
 
@@ -77,9 +92,7 @@ public:
 
     // Обменивается значениям указателя на массив с объектом other
     void swap(ArrayPtr& other) noexcept {
-        Type* ptr = raw_ptr_;
-        raw_ptr_ = other.raw_ptr_;
-        other.raw_ptr_ = ptr;
+        std::swap(this->raw_ptr_, other.raw_ptr_);
     }
 
 private:
